@@ -58,6 +58,10 @@ def extract_data(record: ET.Element) -> list[OrderedDict]:
     data_rec["ScientificName"] = return_text(
         record.find("SAMPLE/SAMPLE_NAME/SCIENTIFIC_NAME")
     )
+    data_rec["SampleAttributes"] = {
+        attr.find("TAG").text: attr.find("VALUE").text
+        for attr in record.find("SAMPLE").findall("SAMPLE_ATTRIBUTES/SAMPLE_ATTRIBUTE")
+    }
 
     # run info for the experiment
     run_records = []

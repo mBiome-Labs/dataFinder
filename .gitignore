@@ -172,3 +172,5 @@ cython_debug/
 
 # param files with API access keys
 params.json
+
+data/

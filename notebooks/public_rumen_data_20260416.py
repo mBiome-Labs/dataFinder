@@ -22,17 +22,17 @@ def _(mo):
     mo.md(r"""
     # Rumen Metagenome Datasets on SRA
 
-    Datasets' metadata was downloaded using `dataFinder` script. Data was obtained on 12Apr2026.
+    Datasets' metadata was downloaded using `dataFinder` script. Data was obtained on 04Apr2026.
     """)
     return
 
 
 @app.cell
 def _(Path, literal_eval, pd):
-    data_path = Path("../data/rumen_microbiome__2026_05_04.tsv")
+    sra_data_path = Path("../data/sra_rumen_microbiome__2026_05_04.tsv")
 
     r_data = pd.read_csv(
-        data_path,
+        sra_data_path,
         sep="\t",
         converters={"SampleAttributes": literal_eval, "Published": pd.to_datetime},
     )
@@ -104,6 +104,8 @@ def _(r_data):
 def _(mo):
     mo.md(r"""
     ## WGS Data
+
+    Data specificall for the *in silico* proteomics.
     """)
     return
 
@@ -362,8 +364,68 @@ def _(px, wgs_data):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Rumen Metagenome Datasets on ENA
+
+    Datasets' metadata was downloaded using `ena_src/runner.py` script. Data was obtained on 06Apr2026.
+    """)
+    return
+
+
 @app.cell
-def _():
+def _(Path, pd):
+    ena_data_path = Path("../data/ena_rumen_microbiome__2026_05_06.tsv")
+
+    e_data = pd.read_csv(
+        ena_data_path,
+        sep="\t",
+        na_values=["Missing", "missing", "not applicable"],
+    )
+    e_data["Gb"] = e_data["base_count"] / 1e9
+
+    useful_cols = (e_data.isna().sum() / len(e_data) < 1).values
+    print(
+        f"Number of columns without comlpetely absent data: {sum(useful_cols)}/{e_data.shape[1]}"
+    )
+
+    e_data = e_data.loc[:, useful_cols].copy()
+    e_data
+    return (e_data,)
+
+
+@app.cell
+def _(e_data):
+    print(
+        f"Number of studies: {len((e_studies:=e_data['study_accession'].unique()))}"
+    )
+    print(
+        f"Library Strategies covered: {list(e_data['library_strategy'].unique())}"
+    )
+    print(f"Library sources covered: {list(e_data['library_source'].unique())}")
+    print(f"Sequencers used: {list(e_data['instrument_model'].unique())}")
+    return
+
+
+@app.cell
+def _(e_data, r_data):
+    not_in_sra = [
+        i
+        for i in e_data["experiment_accession"].unique()
+        if i not in r_data["Experiment"].unique()
+    ]
+    print(f"Number of experiments in ENA not already in the SRA set: {len(not_in_sra)}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Conclusion
+
+    ENA data is a subset of the data available on SRA for the time periods and queries used. Therefore we can just use the SRA datasets for experiments.
+    """)
     return
 
 

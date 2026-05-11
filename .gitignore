@@ -174,3 +174,4 @@ cython_debug/
 params.json
 
 data/
+__marimo__/

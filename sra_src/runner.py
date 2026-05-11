@@ -60,7 +60,7 @@ def main() -> None:
         if len(taxonomy_lst) > 1
         else taxonomy_lst[0]
     )
-    search_term = f"({search_taxas}[ORGANISM]){RUN_PARAMS['final_query']}"
+    search_term = f"({search_taxas}[ORGANISM]{RUN_PARAMS['final_query']}"
     cmd_uid = (
         f'{API_ENV}; esearch -db {search_type} -query "{search_term}" '
         f"| efetch -format uid > {RUN_PARAMS['id_file']}"

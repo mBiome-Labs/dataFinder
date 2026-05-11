@@ -5,7 +5,10 @@ from subprocess import run
 from urllib import parse
 
 RESULT_TYPE = "read_run"
-QUERY = 'tax_tree(3394441) AND (library_source="metagenomic" OR library_source="metatranscriptomic" OR library_source="other")'
+QUERY = (
+    '((tax_tree(749906) OR tax_tree(506599) OR tax_tree(256318)) AND (description="rumen" OR study_title="rumen" OR sample_title="rumen")) OR tax_tree(3394441)'
+    'AND (library_source="metagenomic" OR library_source="metatranscriptomic" OR library_source="other")'
+)
 
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",

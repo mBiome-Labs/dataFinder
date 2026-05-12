@@ -5,10 +5,11 @@ from subprocess import run
 from urllib import parse
 
 RESULT_TYPE = "read_run"
-QUERY = (
-    '((tax_tree(749906) OR tax_tree(506599) OR tax_tree(256318)) AND (description="rumen" OR study_title="rumen" OR sample_title="rumen")) OR tax_tree(3394441)'
-    'AND (library_source="metagenomic" OR library_source="metatranscriptomic" OR library_source="other")'
-)
+QUERY = '(host_tax_id=9606 OR host_scientific_name="homo sapiens" OR host="human") AND (library_source="metagenomic" AND ( instrument_platform="pacbio_smrt" OR instrument_platform="oxford_nanopore" ))'
+# QUERY = (
+#     '((tax_tree(749906) OR tax_tree(506599) OR tax_tree(256318)) AND (description="rumen" OR study_title="rumen" OR sample_title="rumen")) OR tax_tree(3394441)'
+#     'AND (library_source="metagenomic" OR library_source="metatranscriptomic" OR library_source="other")'
+# )
 
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -40,7 +41,7 @@ def main():
         "curl -X 'GET' "
         f"'https://www.ebi.ac.uk/ena/portal/api/search?result={RESULT_TYPE}&query={parse.quote(QUERY)}"
         f"&fields={parse.quote(','.join(fields[1:]))}&dataPortal=ena&includeMetagenomes=true&format=tsv&download=true' "
-        f"-H 'accept: */*' > ena_rumen_microbiome__{time.strftime('%Y_%m_%d', time.gmtime())}.tsv"
+        f"-H 'accept: */*' > ena_data__{time.strftime('%Y_%m_%d', time.gmtime())}.tsv"
     )
     run(tsv_cmd, shell=True)
     logging.info("Script Finished!")

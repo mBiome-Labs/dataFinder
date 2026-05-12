@@ -5,7 +5,11 @@ from subprocess import run
 from urllib import parse
 
 RESULT_TYPE = "read_run"
+
+# query for human gut metagenomic samples
 QUERY = '(host_tax_id=9606 OR host_scientific_name="homo sapiens" OR host="human") AND (library_source="metagenomic" AND ( instrument_platform="pacbio_smrt" OR instrument_platform="oxford_nanopore" ))'
+
+# query for cattle rumen metagenomic samples
 # QUERY = (
 #     '((tax_tree(749906) OR tax_tree(506599) OR tax_tree(256318)) AND (description="rumen" OR study_title="rumen" OR sample_title="rumen")) OR tax_tree(3394441)'
 #     'AND (library_source="metagenomic" OR library_source="metatranscriptomic" OR library_source="other")'
